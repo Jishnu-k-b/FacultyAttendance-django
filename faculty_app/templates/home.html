@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>Welcome to the Faculty Attendance Portal</h1>
+    <a href="{% url 'faculty_register' %}">Register</a>
+    <a href="{% url 'faculty_login' %}">Login</a>
+{% endblock %}
