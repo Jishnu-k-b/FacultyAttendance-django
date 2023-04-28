@@ -40,3 +40,18 @@ def index(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
+
+def leave(request):
+    return render(request, 'leave.html')
+
+def leave_application(request):
+    return render(request, 'leave_application.html')
+
+def leave_status(request):
+    return render(request, 'leave_status.html')
+
+
+def attendance(request):
+    return render(request, 'attendance.html')
+
+

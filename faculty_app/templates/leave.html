@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Leave{% endblock %}
+
+{% block content %}
+  <h1>Leave Applications / status</h1>
+
+  <div class="leave-buttons">
+    <a href="{% url 'leave_application' %}" class="leave-button">Apply For Leave</a>
+    <a href="{% url 'leave_status' %}" class="leave-button">Application Status</a>
+  </div>
+
+{% endblock %}

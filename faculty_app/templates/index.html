@@ -1,5 +1,16 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
+{% block title %}
+  Faculty Attendance Portal
+{% endblock %}
+
 {% block content %}
   <h1>Welcome to the Faculty Attendance Portal!</h1>
+
+{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
 {% endblock %}
