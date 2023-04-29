@@ -11,5 +11,7 @@
 
   <h2>Department Details</h2>
   <p><strong>Employee Id:</strong> {{ faculty.emp_id }}</p>
+  <p><strong>Department:</strong> {{ faculty.get_department_display }} </p>
+  <p><strong>Subject:</strong> {{ faculty.get_subject_display }}</p>
 
 {% endblock %}

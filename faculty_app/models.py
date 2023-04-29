@@ -19,6 +19,9 @@ class Faculty(models.Model):
     department = models.CharField(max_length=4, choices=DEPARTMENTS)
     date_of_join = models.DateField()
     subject = models.CharField(max_length=4, choices=SUBJECTS)
+    emp_id = models.CharField(max_length=10, unique=True)
+    
+
 
     def __str__(self):
         return self.user.username

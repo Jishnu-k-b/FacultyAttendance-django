@@ -11,6 +11,7 @@ def register(request):
             user = form.save()
             faculty = Faculty.objects.create(
                 user=user,
+                emp_id=form.cleaned_data['emp_id'],
                 dob=form.cleaned_data['dob'],
                 department=form.cleaned_data['department'],
                 date_of_join=form.cleaned_data['date_of_join'],
@@ -50,8 +51,12 @@ def leave_application(request):
 def leave_status(request):
     return render(request, 'leave_status.html')
 
+def profile(request):
+    faculty = Faculty.objects.get(user=request.user)
+    return render(request, 'profile.html', {'faculty': faculty})
 
 def attendance(request):
-    return render(request, 'attendance.html')
+    faculty = Faculty.objects.get(user=request.user)
+    return render(request, 'attendance.html', {'faculty': faculty})
 
 

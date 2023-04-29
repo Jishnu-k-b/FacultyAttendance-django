@@ -9,6 +9,7 @@ urlpatterns = [
     path('leave/', views.leave, name='leave'),
     path('leave_application/', views.leave_application, name='leave_application'),
     path('leave_status/', views.leave_status, name='leave_status'),
+    path('profile/', views.profile, name='profile'),
     path('attendance/', views.attendance, name='attendance')
 
 ]
