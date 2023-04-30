@@ -10,4 +10,46 @@
     <button type="submit">Register</button>
   </form>
   </div>
+  <script>
+    const subjects = {
+        MCA: [
+            { value: 'COA', label: 'Computer Architecture and Analysis' },
+            { value: 'AOP', label: 'Art of Programming' },
+        ],
+        MBA: [
+            { value: 'RM', label: 'Research Methodology' },
+            { value: 'BA', label: 'Business administration' },
+        ],
+        BHM: [
+            { value: 'HM', label: 'Hotel Management' },
+            { value: 'MH', label: 'Management Hotel' },
+        ],
+        MCOM: [
+            { value: 'AC', label: 'Accounting' },
+            { value: 'CO', label: 'Commerce' },
+        ],
+    };
+
+    const subjectSelect = document.getElementById('subject');
+    const departmentSelect = document.getElementById('department');
+
+    departmentSelect.addEventListener('change', () => {
+        const department = departmentSelect.value;
+        const options = subjects[department];
+
+        // Remove existing options
+        while (subjectSelect.firstChild) {
+            subjectSelect.removeChild(subjectSelect.firstChild);
+        }
+
+        // Add new options
+        for (const option of options) {
+            const element = document.createElement('option');
+            element.value = option.value;
+            element.textContent = option.label;
+            subjectSelect.appendChild(element);
+        }
+    });
+</script>
+
 {% endblock %}

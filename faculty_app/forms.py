@@ -7,8 +7,8 @@ import datetime
 
 class FacultyForm(UserCreationForm):
     emp_id = forms.CharField()
-    department = forms.ChoiceField(choices=DEPARTMENTS)
-    subject = forms.ChoiceField(choices= SUBJECTS)
+    department = forms.ChoiceField(choices=DEPARTMENTS, widget=forms.Select(attrs={'id': 'department'}))
+    subject = forms.ChoiceField(choices=SUBJECTS, widget=forms.Select(attrs={'id': 'subject'}))
     dob = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'max': '2001-01-01'}))
     date_of_join = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'max': str(date.today())}))
 
