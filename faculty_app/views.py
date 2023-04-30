@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import FacultyForm, LoginForm
-from .models import Faculty
+from .forms import FacultyForm, LoginForm, LeaveApplicationForm
+from .models import Faculty, Leave
 
 def register(request):
     if request.method == 'POST':
@@ -42,14 +42,15 @@ def logout_view(request):
     logout(request)
     return redirect('index')
 
-def leave(request):
-    return render(request, 'leave.html')
+def leave_management(request):
+    return render(request, 'leave_management.html')
 
 def leave_application(request):
     return render(request, 'leave_application.html')
 
 def leave_status(request):
-    return render(request, 'leave_status.html')
+    user_leaves = Leave.objects.filter(user_id=request.user.id)
+    return render(request, 'leave_status.html', {'user_leaves': user_leaves})
 
 def profile(request):
     faculty = Faculty.objects.get(user=request.user)
@@ -60,3 +61,17 @@ def attendance(request):
     return render(request, 'attendance.html', {'faculty': faculty})
 
 
+
+def leave_application(request):
+    form = LeaveApplicationForm(request.POST or None)
+    if form.is_valid():
+        leave = form.save(commit=False)
+        leave.user = request.user
+        leave.save()
+        return redirect('leave_status')
+    context = {'form': form}
+    return render(request, 'leave_application.html', context)
+
+
+def feedback(request):
+    return render(request, 'feedback.html')

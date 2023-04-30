@@ -25,3 +25,15 @@ class Faculty(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+
+class Leave(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    reason = models.CharField(max_length=255)
+    status = models.CharField(max_length=40, default='approval pending')
+
+    def __str__(self):
+        return self.user.username
