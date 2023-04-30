@@ -1,14 +1,16 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Faculty, DEPARTMENTS, SUBJECTS
+from .models import Faculty, DEPARTMENTS, SUBJECTS, Leave
+from datetime import date
+import datetime
 
 class FacultyForm(UserCreationForm):
     emp_id = forms.CharField()
     department = forms.ChoiceField(choices=DEPARTMENTS)
     subject = forms.ChoiceField(choices= SUBJECTS)
-    dob = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    date_of_join = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    dob = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'max': '2001-01-01'}))
+    date_of_join = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'max': str(date.today())}))
 
     class Meta:
         model = User
@@ -21,3 +23,12 @@ class FacultyForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=150)
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class LeaveApplicationForm(forms.ModelForm):
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today().strftime('%Y-%m-%d')}))
+    end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today().strftime('%Y-%m-%d')}))
+    reason = forms.CharField(max_length=200)
+    class Meta:
+        model = Leave
+        fields = [ 'start_date', 'end_date', 'reason']

@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
-
-{% block title %}Leave Application{% endblock %}
-
+{% block title %}Leave Status{% endblock %}
 {% block content %}
   <h1>Leave Status</h1>
-
-
+  {% if user_leaves %}
+    <ul>
+      {% for leave in user_leaves %}
+        <li>Leave date : {{ leave.start_date }} - {{ leave.end_date }}</li>
+         <li> Reason : {{ leave.reason }}</li>
+          <li>Leave Status : {{ leave.status }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No leave applications found.</p>
+  {% endif %}
 {% endblock %}

@@ -26,7 +26,8 @@
   {% if user.is_authenticated %}
     <a href="{% url 'profile' %}" class="navbar-button">Profile</a>
     <a href="{% url 'attendance' %}" class="navbar-button">Attendance</a>
-    <a href="{% url 'leave' %}" class="navbar-button">Leave</a>
+    <a href="{% url 'leave_management' %}" class="navbar-button">Leave</a>
+    <a href="{% url 'feedback' %}" class="navbar-button">Feedback</a>
     <a href="{% url 'logout' %}" class="navbar-button">Logout</a>
   
   {% else %}
