@@ -6,6 +6,7 @@ from .models import Faculty, Leave
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
+from .decorators import user_required, admin_required
 
 
 
@@ -40,6 +41,7 @@ def login_view(request):
         form = LoginForm()
     return render(request, 'registration/login.html', {'form': form})
 
+@user_required
 def index(request):
     return render(request, 'index.html')
 
@@ -47,26 +49,31 @@ def logout_view(request):
     logout(request)
     return redirect('index')
 
+@user_required
 def leave_management(request):
     return render(request, 'leave_management.html')
 
+@user_required
 def leave_application(request):
     return render(request, 'leave_application.html')
 
+@user_required
 def leave_status(request):
     user_leaves = Leave.objects.filter(user_id=request.user.id)
     return render(request, 'leave_status.html', {'user_leaves': user_leaves})
 
+@user_required
 def profile(request):
     faculty = Faculty.objects.get(user=request.user)
     return render(request, 'profile.html', {'faculty': faculty})
 
+@user_required
 def attendance(request):
     faculty = Faculty.objects.get(user=request.user)
     return render(request, 'attendance.html', {'faculty': faculty})
 
 
-
+@user_required
 def leave_application(request):
     form = LeaveApplicationForm(request.POST or None)
     if form.is_valid():
@@ -77,7 +84,7 @@ def leave_application(request):
     context = {'form': form}
     return render(request, 'leave_application.html', context)
 
-
+@user_required
 def feedback(request):
     return render(request, 'feedback.html')
 
@@ -91,6 +98,7 @@ class CustomAdminLoginView(LoginView):
     def get_success_url(self):
         return self.success_url
 
+@admin_required
 def admin_home(request):
     users = User.objects.all()
     return render(request, 'admin/admin_home.html', {'users': users})
