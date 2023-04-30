@@ -1,0 +1,17 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<div class="admin-home">
+  <h2>All Users</h2>
+  <dl>
+    {% for user in users %}
+    {% if not user.is_staff %}
+      <dt>{{ user.username }}</dt>
+      <dd>{{ user.faculty.emp_id }}</dd>
+      <dd>{{ user.faculty.get_subject_display }}</dd>
+      <dd>{{ user.faculty.get_department_display }}</dd>
+    {% endif %}
+    {% endfor %}
+  </dl>
+</div>
+{% endblock %}

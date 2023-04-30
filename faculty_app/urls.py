@@ -11,6 +11,7 @@ urlpatterns = [
     path('leave_status/', views.leave_status, name='leave_status'),
     path('profile/', views.profile, name='profile'),
     path('attendance/', views.attendance, name='attendance'),
-    path('feedback/', views.feedback, name='feedback')
-
+    path('feedback/', views.feedback, name='feedback'),
+    path('admin_login/', views.CustomAdminLoginView.as_view(), name='admin_login'),
+    path('admin_home/',views.admin_home, name='admin_home'),
 ]

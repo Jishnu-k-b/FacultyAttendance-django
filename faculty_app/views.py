@@ -3,6 +3,11 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import FacultyForm, LoginForm, LeaveApplicationForm
 from .models import Faculty, Leave
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+from django.contrib.auth.models import User
+
+
 
 def register(request):
     if request.method == 'POST':
@@ -75,3 +80,17 @@ def leave_application(request):
 
 def feedback(request):
     return render(request, 'feedback.html')
+
+
+
+
+class CustomAdminLoginView(LoginView):
+    template_name = 'admin/login.html'
+    success_url = reverse_lazy('admin_home')
+
+    def get_success_url(self):
+        return self.success_url
+
+def admin_home(request):
+    users = User.objects.all()
+    return render(request, 'admin/admin_home.html', {'users': users})
