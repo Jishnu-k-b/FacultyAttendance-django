@@ -1,0 +1,51 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<div class="user-list" style="margin-top: 90px; text-align: center;">
+
+  <table class="user-table">
+    <h2>All Users</h2>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Employee ID</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for leave in leaves %}
+          <tr>
+
+            <td>{{ leave.user.first_name }} {{ leave.user.last_name }}</td>
+            <td>{{ leave.user.faculty.emp_id }}</td>
+            <td>{{ leave.start_date }}</td>
+            <td>{{ leave.end_date }}</td>
+            <td>{{ leave.reason }}</td>
+            <td>{{ leave.status }}</td>
+            <td>
+                {% if leave.status not in "['declined', 'approved']" %}
+  <form method="post" action="{% url 'update_status' leave.id %}">
+    {% csrf_token %}
+    <input type="hidden" name="status" value="approved">
+    <button type="submit">Approve</button>
+  </form>
+  <form method="post" action="{% url 'update_status' leave.id %}">
+    {% csrf_token %}
+    <input type="hidden" name="status" value="declined">
+    <button type="submit">Decline</button>
+  </form>
+{% else %}
+  <button disabled>Approve</button>
+  <button disabled>Decline</button>
+{% endif %}
+            </td>
+          </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

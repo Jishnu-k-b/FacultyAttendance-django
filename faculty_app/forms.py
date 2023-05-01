@@ -32,3 +32,7 @@ class LeaveApplicationForm(forms.ModelForm):
     class Meta:
         model = Leave
         fields = [ 'start_date', 'end_date', 'reason']
+
+
+class FeedbackForm(forms.Form):
+    message = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'placeholder': 'Type your feedback here...'}))

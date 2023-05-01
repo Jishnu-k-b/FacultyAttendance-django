@@ -3,13 +3,37 @@
 {% block content %}
   <h1>Leave Status</h1>
   {% if user_leaves %}
-    <ul>
-      {% for leave in user_leaves %}
-        <li>Leave date : {{ leave.start_date }} - {{ leave.end_date }}</li>
-         <li> Reason : {{ leave.reason }}</li>
-          <li>Leave Status : {{ leave.status }}</li>
-      {% endfor %}
-    </ul>
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for leave in user_leaves %}
+          <tr>
+            <td>{{ leave.start_date }}</td>
+            <td>{{ leave.end_date }}</td>
+            <td>{{ leave.reason }}</td>
+            <td>{{ leave.status }}</td>
+            <td>
+              {% if leave.status not in "['declined', 'approved']" %}
+                <form method="post" action="{% url 'delete_leave' leave.id %}">
+                  {% csrf_token %}
+                  <button type="submit">Delete</button>
+                </form>
+              {% else %}
+                <button disabled>Delete</button>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   {% else %}
     <p>No leave applications found.</p>
   {% endif %}

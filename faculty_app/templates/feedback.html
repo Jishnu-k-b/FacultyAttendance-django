@@ -1,8 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Leave{% endblock %}
+{% block title %}Feedback{% endblock %}
 
 {% block content %}
-  <h1>FeedBack</h1>
+  <h1>Feedback</h1>
+<div class="login">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
 
+    <button type="submit">Submit</button>
+  </form>
+</div>
 {% endblock %}

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import FacultyForm, LoginForm, LeaveApplicationForm
-from .models import Faculty, Leave
+from .forms import FacultyForm, LoginForm, LeaveApplicationForm, FeedbackForm
+from .models import Faculty, Leave, Feedback
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -58,8 +58,14 @@ def leave_application(request):
     return render(request, 'leave_application.html')
 
 @user_required
+def delete_leave(request, leave_id):
+    leave = Leave.objects.get(pk=leave_id)
+    if leave.user == request.user:
+        leave.delete()
+    return redirect('leave_status')
+
 def leave_status(request):
-    user_leaves = Leave.objects.filter(user_id=request.user.id)
+    user_leaves = Leave.objects.filter(user=request.user)
     return render(request, 'leave_status.html', {'user_leaves': user_leaves})
 
 @user_required
@@ -84,12 +90,24 @@ def leave_application(request):
     context = {'form': form}
     return render(request, 'leave_application.html', context)
 
+
 @user_required
 def feedback(request):
-    return render(request, 'feedback.html')
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = Feedback(user=request.user, message=form.cleaned_data['message'])
+            feedback.save()
+            return redirect('feedback_success')
+    else:
+        form = FeedbackForm()
 
+    return render(request, 'feedback.html', {'form': form})
 
-
+def home(request):
+    return render(request, 'home.html')
+def feedback_success(request):
+    return render(request, 'feedback_success.html')
 
 class CustomAdminLoginView(LoginView):
     template_name = 'admin/login.html'
@@ -98,7 +116,36 @@ class CustomAdminLoginView(LoginView):
     def get_success_url(self):
         return self.success_url
 
+
+
+
 @admin_required
 def admin_home(request):
     users = User.objects.all()
     return render(request, 'admin/admin_home.html', {'users': users})
+
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'admin/user_list.html', {'users': users})
+
+def admin_leave(request):
+    leaves = Leave.objects.select_related('user__faculty').all()
+    return render(request, 'admin/admin_leave.html', {'leaves': leaves})
+
+
+def update_status(request, leave_id):
+    leave = Leave.objects.get(id=leave_id)
+    status = request.POST.get('status')
+
+    if status == 'approved':
+        leave.status = 'approved'
+    elif status == 'declined':
+        leave.status = 'declined'
+
+    leave.save()
+    leaves = Leave.objects.all()
+    return render(request, 'admin/admin_leave.html', {'leaves': leaves})
+
+def admin_feedback(request):
+    feedbacks = Feedback.objects.select_related('user').all()
+    return render(request, 'admin/admin_feedback.html', {'feedbacks': feedbacks})

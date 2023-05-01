@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Feedback List{% endblock %}
+
+{% block content %}
+<h1>Feedback List</h1>
+
+{% if feedbacks %}
+<table class="user-table">
+  <thead>
+    <tr>
+      <th>Employee ID</th>
+      <th>Name</th>
+      <th>Feedback</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for feedback in feedbacks %}
+    <tr>
+      <td>{{ feedback.user.faculty.emp_id }}</td>
+      <td>{{ feedback.user.first_name }} {{ feedback.user.last_name }}</td>
+      <td>{{ feedback.message }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No feedbacks found.</p>
+{% endif %}
+
+{% endblock %}

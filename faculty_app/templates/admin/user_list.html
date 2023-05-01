@@ -1,0 +1,30 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<div class="user-list" style="margin-top: 90px; text-align: center;">
+
+  <table class="user-table">
+    <h2>All Users</h2>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Employee ID</th>
+        <th>Subject</th>
+        <th>Department</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        {% if not user.is_staff %}
+          <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.faculty.emp_id }}</td>
+            <td>{{ user.faculty.get_subject_display }}</td>
+            <td>{{ user.faculty.get_department_display }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

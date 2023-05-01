@@ -22,7 +22,7 @@
 </head>
 <body>
     <nav class="navbar">
-  <a href="{% url 'index' %}" class="navbar-button">Home</a>
+  <a href="{% url 'home' %}" class="navbar-button">Home</a>
   {% if user.is_authenticated %}
     <a href="{% url 'profile' %}" class="navbar-button">Profile</a>
     <a href="{% url 'attendance' %}" class="navbar-button">Attendance</a>
