@@ -47,7 +47,7 @@ def index(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('index')
+    return redirect('home')
 
 @user_required
 def leave_management(request):
