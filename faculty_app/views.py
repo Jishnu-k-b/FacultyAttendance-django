@@ -7,9 +7,10 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from .decorators import user_required, admin_required
-from django.contrib.auth.decorators import login_required
 from .utils import distance
 from datetime import datetime, date
+from . import config
+from .forms import ConfigForm
 
 
 
@@ -163,8 +164,8 @@ def mark_attendance(request):
         lat = request.POST.get('lat')
         lng = request.POST.get('lng')
         
-        specific_lat = 9.9312328
-        specific_lng = 76.2673041
+        specific_lat = config.SPECIFIC_LATITUDE
+        specific_lng = config.SPECIFIC_LONGITUDE
         dist = distance(lat, lng, specific_lat, specific_lng)
         if dist < 1:
             now = datetime.now().time()
@@ -185,4 +186,17 @@ def admin_view_attendance(request):
      faculty = Faculty.objects.select_related('user').exclude(user__is_superuser=True)
      attendances = Attendance.objects.select_related('user').exclude(user__is_superuser=True)
      return render(request, 'admin/admin_view_attendance.html', {'attendances': attendances, 'faculty':faculty})
+
+
+def admin_config(request):
+    form = ConfigForm(initial={'specific_latitude': config.SPECIFIC_LATITUDE,
+                               'specific_longitude': config.SPECIFIC_LONGITUDE})
+    if request.method == 'POST':
+        form = ConfigForm(request.POST)
+        if form.is_valid():
+            config.SPECIFIC_LATITUDE = form.cleaned_data['specific_latitude']
+            config.SPECIFIC_LONGITUDE = form.cleaned_data['specific_longitude']
+            return render(request, 'admin/admin_success.html')
+    return render(request, 'admin/admin_config.html', {'form': form})
+
 

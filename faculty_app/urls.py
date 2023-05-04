@@ -25,6 +25,8 @@ urlpatterns = [
     path('mark_attendance/',views.mark_attendance, name='mark_attendance'),
     path('view_attendance/',views.view_attendance, name='view_attendance'),
     path('admin_view_attendance/',views.admin_view_attendance, name='admin_view_attendance'),
+    path('admin_config/',views.admin_config, name='admin_config'),
+
 
 
 

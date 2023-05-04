@@ -36,3 +36,8 @@ class LeaveApplicationForm(forms.ModelForm):
 
 class FeedbackForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'placeholder': 'Type your feedback here...'}))
+
+
+class ConfigForm(forms.Form):
+    specific_latitude = forms.FloatField(label='Specific Latitude')
+    specific_longitude = forms.FloatField(label='Specific Longitude')

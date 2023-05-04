@@ -1,0 +1,9 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+<h1>Edit Campus Location</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+{% endblock %}
