@@ -7,6 +7,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from .decorators import user_required, admin_required
+from django.contrib.auth.decorators import login_required
 from .utils import distance
 from datetime import datetime, date
 
@@ -92,7 +93,6 @@ def leave_application(request):
     context = {'form': form}
     return render(request, 'leave/leave_application.html', context)
 
-
 @user_required
 def feedback(request):
     if request.method == 'POST':
@@ -108,6 +108,7 @@ def feedback(request):
 
 def home(request):
     return render(request, 'other/home.html')
+
 def feedback_success(request):
     return render(request, 'feedback/feedback_success.html')
 
@@ -118,9 +119,6 @@ class CustomAdminLoginView(LoginView):
     def get_success_url(self):
         return self.success_url
 
-
-
-
 @admin_required
 def admin_home(request):
     users = User.objects.all()
@@ -130,10 +128,10 @@ def user_list(request):
     users = User.objects.all()
     return render(request, 'admin/user_list.html', {'users': users})
 
+@admin_required
 def admin_leave(request):
     leaves = Leave.objects.select_related('user__faculty').all()
     return render(request, 'admin/admin_leave.html', {'leaves': leaves})
-
 
 def update_status(request, leave_id):
     leave = Leave.objects.get(id=leave_id)
@@ -148,9 +146,11 @@ def update_status(request, leave_id):
     leaves = Leave.objects.all()
     return render(request, 'admin/admin_leave.html', {'leaves': leaves})
 
+@admin_required
 def admin_feedback(request):
-    feedbacks = Feedback.objects.select_related('user').all()
-    return render(request, 'admin/admin_feedback.html', {'feedbacks': feedbacks})
+    feedbacks = Feedback.objects.select_related('user').all().exclude(user__is_superuser=True)
+    non_admin_feedbacks = feedbacks.filter(user__in=User.objects.filter(is_superuser=False))
+    return render(request, 'admin/admin_feedback.html', {'feedbacks': non_admin_feedbacks})
 
 def mark_attendance(request):
     user = request.user
@@ -175,11 +175,14 @@ def mark_attendance(request):
             return render(request, 'attendance/mark_attendance.html', {'message': 'You are not at the designated location!'})
     return render(request, 'attendance/mark_attendance.html')
 
-
-
-
 def view_attendance(request):
     faculty = Faculty.objects.get(user=request.user)
     attendances = Attendance.objects.filter(user=request.user)
     return render(request, 'attendance/view_attendance.html', {'attendances': attendances, 'faculty':faculty})
+
+@admin_required
+def admin_view_attendance(request):
+     faculty = Faculty.objects.select_related('user').exclude(user__is_superuser=True)
+     attendances = Attendance.objects.select_related('user').exclude(user__is_superuser=True)
+     return render(request, 'admin/admin_view_attendance.html', {'attendances': attendances, 'faculty':faculty})
 

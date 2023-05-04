@@ -1,0 +1,35 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+
+<h1>Attendance Report</h1>
+{% if faculty %}
+  {% for user in faculty %}
+    <h2>{{ user.user.first_name }} {{ user.user.last_name }}</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Present</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attendance in attendances %}
+          {% if attendance.user == user.user %}
+            <tr>
+              <td>{{ attendance.mark_date }}</td>
+              <td>{{ attendance.status }}</td>
+            </tr>
+          {% endif %}
+        {% empty %}
+          <tr>
+            <td colspan="2">No attendance records found for this user.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endfor %}
+{% else %}
+  <p>No faculty members found.</p>
+{% endif %}
+{% endblock %}
