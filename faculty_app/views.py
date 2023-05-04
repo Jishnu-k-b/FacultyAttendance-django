@@ -2,11 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import FacultyForm, LoginForm, LeaveApplicationForm, FeedbackForm
-from .models import Faculty, Leave, Feedback
+from .models import Faculty, Leave, Feedback, Attendance
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from .decorators import user_required, admin_required
+from .utils import distance
+from datetime import datetime, date
 
 
 
@@ -43,7 +45,7 @@ def login_view(request):
 
 @user_required
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'other/index.html')
 
 def logout_view(request):
     logout(request)
@@ -51,11 +53,11 @@ def logout_view(request):
 
 @user_required
 def leave_management(request):
-    return render(request, 'leave_management.html')
+    return render(request, 'leave/leave_management.html')
 
 @user_required
 def leave_application(request):
-    return render(request, 'leave_application.html')
+    return render(request, 'leave/leave_application.html')
 
 @user_required
 def delete_leave(request, leave_id):
@@ -66,17 +68,17 @@ def delete_leave(request, leave_id):
 
 def leave_status(request):
     user_leaves = Leave.objects.filter(user=request.user)
-    return render(request, 'leave_status.html', {'user_leaves': user_leaves})
+    return render(request, 'leave/leave_status.html', {'user_leaves': user_leaves})
 
 @user_required
 def profile(request):
     faculty = Faculty.objects.get(user=request.user)
-    return render(request, 'profile.html', {'faculty': faculty})
+    return render(request, 'other/profile.html', {'faculty': faculty})
 
 @user_required
 def attendance(request):
     faculty = Faculty.objects.get(user=request.user)
-    return render(request, 'attendance.html', {'faculty': faculty})
+    return render(request, 'attendance/attendance.html', {'faculty': faculty})
 
 
 @user_required
@@ -88,7 +90,7 @@ def leave_application(request):
         leave.save()
         return redirect('leave_status')
     context = {'form': form}
-    return render(request, 'leave_application.html', context)
+    return render(request, 'leave/leave_application.html', context)
 
 
 @user_required
@@ -102,12 +104,12 @@ def feedback(request):
     else:
         form = FeedbackForm()
 
-    return render(request, 'feedback.html', {'form': form})
+    return render(request, 'feedback/feedback.html', {'form': form})
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'other/home.html')
 def feedback_success(request):
-    return render(request, 'feedback_success.html')
+    return render(request, 'feedback/feedback_success.html')
 
 class CustomAdminLoginView(LoginView):
     template_name = 'admin/login.html'
@@ -149,3 +151,35 @@ def update_status(request, leave_id):
 def admin_feedback(request):
     feedbacks = Feedback.objects.select_related('user').all()
     return render(request, 'admin/admin_feedback.html', {'feedbacks': feedbacks})
+
+def mark_attendance(request):
+    user = request.user
+    today = date.today()
+    attendance_exists = Attendance.objects.filter(user=user, mark_date=today).exists()
+    if attendance_exists:
+        return render(request, 'attendance/marked.html', {'message': 'Attendance already marked for today!'})
+    
+    if request.method == 'POST':
+        lat = request.POST.get('lat')
+        lng = request.POST.get('lng')
+        
+        specific_lat = 9.9312328
+        specific_lng = 76.2673041
+        dist = distance(lat, lng, specific_lat, specific_lng)
+        if dist < 1:
+            now = datetime.now().time()
+            attendance = Attendance(user=user, mark_date=today, mark_time=now, status=True)
+            attendance.save()
+            return render(request, 'attendance/mark_attendance.html', {'message': 'Attendance marked successfully!'})
+        else:
+            return render(request, 'attendance/mark_attendance.html', {'message': 'You are not at the designated location!'})
+    return render(request, 'attendance/mark_attendance.html')
+
+
+
+
+def view_attendance(request):
+    faculty = Faculty.objects.get(user=request.user)
+    attendances = Attendance.objects.filter(user=request.user)
+    return render(request, 'attendance/view_attendance.html', {'attendances': attendances, 'faculty':faculty})
+

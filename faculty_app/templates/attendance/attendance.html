@@ -12,4 +12,10 @@
   <h2>Department Details</h2>
   <p><strong>Employee Id:</strong> {{ faculty.emp_id }}</p>
 
+
+  <a href="{% url 'mark_attendance' %}" class="navbar-button">Mark attendance</a>
+  <a href="{% url 'view_attendance' %}" class="navbar-button">View attendance</a>
+
+
+
 {% endblock %}

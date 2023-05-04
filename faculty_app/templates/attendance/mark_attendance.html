@@ -1,0 +1,43 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<!-- mark_attendance.html -->
+<button onclick="getLocation()">Get Location</button>
+<form method="post">
+    {% csrf_token %}
+    <label for="lat">Latitude:</label>
+    <input type="text" name="lat" id="lat">
+    <br>
+    <label for="lng">Longitude:</label>
+    <input type="text" name="lng" id="lng">
+    <br>
+    <button type="submit">Mark Attendance</button>
+</form>
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(fillLocationFields);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function fillLocationFields(position) {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        document.getElementById('lat').value = lat;
+        document.getElementById('lng').value = lng;
+    }
+</script>
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+{% endblock %}

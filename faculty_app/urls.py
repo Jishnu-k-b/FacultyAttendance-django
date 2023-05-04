@@ -22,4 +22,8 @@ urlpatterns = [
     path('feedback/', views.feedback, name='feedback'),
     path('admin_feedback/',views.admin_feedback, name='admin_feedback'),
     path('feedback_success/',views.feedback_success, name='feedback_success'),
+    path('mark_attendance/',views.mark_attendance, name='mark_attendance'),
+    path('view_attendance/',views.view_attendance, name='view_attendance'),
+
+
 ]

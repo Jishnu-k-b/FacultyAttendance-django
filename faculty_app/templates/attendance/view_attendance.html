@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<br>
+<br>
+<br>
+<br>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/attendance.css' %}">
+
+<h2>Attendance History</h2>
+{% csrf_token %}
+{% if faculty %}
+<p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+<p><strong>Username:</strong> {{ user.username }}</p>
+
+<h2>Department Details</h2>
+<p><strong>Employee Id:</strong> {{ faculty.emp_id }}</p>
+<p><strong>Department:</strong> {{ faculty.get_department_display }} </p>
+<p><strong>Subject:</strong> {{ faculty.get_subject_display }}</p>
+
+<table class="attendance-table">
+  <tr>
+    <th>Date</th>
+    <th>Status</th>
+  </tr>
+  {% for attendance in attendances %}
+  <tr>
+    <td>{{ attendance.mark_date }}</td>
+    <td>{% if attendance.status %}Present{% else %}Absent{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% else %}
+<p>No attendance records found.</p>
+{% endif %}
+{% endblock %}
+
+

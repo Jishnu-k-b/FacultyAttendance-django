@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 DEPARTMENTS = [
     ('MCA', 'Computer Application'),
@@ -9,8 +10,15 @@ DEPARTMENTS = [
 ]
 
 SUBJECTS = [
-    ('COS', 'CORE SUBJECT'),
-    ('OPS', 'OPTIONAL SUBJECT'),
+    ('COA', 'Computer Architecture and Analysis'),
+    ('AOP', 'Art of Programming'),
+    ('RM', 'Research Methodology'),
+    ('BA', 'Business administration'),
+    ('HM', 'Hotel Management'),
+    ('MH', 'Management Hotel'),
+    ('AC', 'Accounting'),
+    ('CO', 'Commerce'),
+
 ]
 
 class Faculty(models.Model):
@@ -42,3 +50,9 @@ class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+class Attendance(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    mark_date = models.DateField()
+    mark_time = models.TimeField(default=datetime.time(0, 0))
+    status = models.BooleanField(default=False)
