@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Attendance{% endblock %}
 
 {% block content %}
-  <h1>Profile</h1>
+  <h1>Attendance</h1>
 
   <h2>User Details</h2>
   <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
@@ -13,9 +13,21 @@
   <p><strong>Employee Id:</strong> {{ faculty.emp_id }}</p>
 
 
-  <a href="{% url 'mark_attendance' %}" class="navbar-button">Mark attendance</a>
+
+  {% for leave in leaves %}
+  {% if leave.start_date|date:'Y-m-d' <= today %}
+  <h2><strong>You are on leave</strong></h2>
+  {% endif %}
+  {% if leave.start_date|date:'Y-m-d' <= today and leave.end_date|date:'Y-m-d' >= today %}
+    <button class="navbar-button" style="display:none;" disabled>Mark attendance</button>
+  {% else %}
+    <a href="{% url 'mark_attendance' %}" class="navbar-button">Mark attendance</a>
+  {% endif %}
+{% endfor %}
+
+
+
+
   <a href="{% url 'view_attendance' %}" class="navbar-button">View attendance</a>
-
-
 
 {% endblock %}

@@ -13,7 +13,6 @@ from . import config
 from .forms import ConfigForm
 
 
-
 def register(request):
     if request.method == 'POST':
         form = FacultyForm(request.POST)
@@ -77,10 +76,11 @@ def profile(request):
     faculty = Faculty.objects.get(user=request.user)
     return render(request, 'other/profile.html', {'faculty': faculty})
 
-@user_required
 def attendance(request):
     faculty = Faculty.objects.get(user=request.user)
-    return render(request, 'attendance/attendance.html', {'faculty': faculty})
+    today = date.today().strftime('%Y-%m-%d')
+    leaves = Leave.objects.filter(user=request.user)
+    return render(request, 'attendance/attendance.html', {'faculty': faculty, 'leaves': leaves, 'today':today})
 
 
 @user_required
@@ -125,6 +125,7 @@ def admin_home(request):
     users = User.objects.all()
     return render(request, 'admin/admin_home.html', {'users': users})
 
+@admin_required
 def user_list(request):
     users = User.objects.all()
     return render(request, 'admin/user_list.html', {'users': users})
