@@ -2,24 +2,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<!-- mark_attendance.html -->
-<button onclick="getLocation()">Get Your Current Location</button>
-<form method="post">
-    {% csrf_token %}
-    <label for="lat">Latitude:</label>
-    <input type="text" name="lat" id="lat" readonly>
-    <br>
-    <label for="lng">Longitude:</label>
-    <input type="text" name="lng" id="lng" readonly>
-    <br>
-    <button type="submit">Mark Attendance</button>
-</form>
+  <header style="padding: 20px;">
+    <h1>Mark Your Attendance</h1>
+  </header>
+  <main style="padding: 20px;">
+    <center>
+    <button onclick="getLocation()" style="background-color: #4CAF50; color: #fff; border: none; padding: 10px 20px; cursor: pointer;">Get Your Current Location</button>
+    <form method="post">
+      {% csrf_token %}
+      <input type="text" name="lat" id="lat" style="display:none">
+      <input type="text" name="lng" id="lng" style="display:none">
+      <br>
+      <button id="mark-attendance-btn" type="submit" style="display:none; padding: 10px 20px; background-color: #4CAF50; color: #fff; border: none; padding: 10px 20px; cursor: pointer;">Mark Attendance</button>
+    </form>
+    {% if message %}
+      <p style="color: red;">{{ message }}</p>
+    {% endif %}
+  </main>
+</center>
+
 <script>
     function getLocation() {
         if (navigator.geolocation) {
@@ -34,9 +35,7 @@
         var lng = position.coords.longitude;
         document.getElementById('lat').value = lat;
         document.getElementById('lng').value = lng;
+        document.getElementById("mark-attendance-btn").style.display = "block";
     }
 </script>
-{% if message %}
-<p>{{ message }}</p>
-{% endif %}
 {% endblock %}

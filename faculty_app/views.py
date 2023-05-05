@@ -187,7 +187,7 @@ def admin_view_attendance(request):
      attendances = Attendance.objects.select_related('user').exclude(user__is_superuser=True)
      return render(request, 'admin/admin_view_attendance.html', {'attendances': attendances, 'faculty':faculty})
 
-
+@admin_required
 def admin_config(request):
     form = ConfigForm(initial={'specific_latitude': config.SPECIFIC_LATITUDE,
                                'specific_longitude': config.SPECIFIC_LONGITUDE})
