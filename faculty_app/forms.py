@@ -1,9 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from .models import Faculty, DEPARTMENTS, SUBJECTS, Leave
+from .models import  DEPARTMENTS, SUBJECTS, Leave, Faculty
 from datetime import date
 import datetime
+
 
 class FacultyForm(UserCreationForm):
     emp_id = forms.CharField()
@@ -19,10 +21,26 @@ class FacultyForm(UserCreationForm):
             'first_name': 'First Name',
             'last_name': 'Last Name',
         }
+    def clean_emp_id(self):
+        emp_id = self.cleaned_data['emp_id']
+        if Faculty.objects.filter(emp_id=emp_id).exists():
+            raise forms.ValidationError("This emp_id is already in use. Please use a different emp_id.")
+        return emp_id
+    
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=150)
     password = forms.CharField(widget=forms.PasswordInput)
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if not user:
+                self.add_error('username', 'Invalid username or password.')
 
 
 class LeaveApplicationForm(forms.ModelForm):

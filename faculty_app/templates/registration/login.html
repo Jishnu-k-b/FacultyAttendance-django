@@ -5,7 +5,28 @@
   <h2>Faculty Login</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div class="form-group{% if form.username.errors %} has-error{% endif %}">
+      <label for="{{ form.username.id_for_label }}">Username:</label>
+      {{ form.username }}
+      {% if form.username.errors %}
+      <div class="help-block">
+        {% for error in form.username.errors %}
+        <strong style="color:red">{{ error }}</strong>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="form-group{% if form.password.errors %} has-error{% endif %}">
+      <label for="{{ form.password.id_for_label }}">Password:</label>
+      {{ form.password }}
+      {% if form.password.errors %}
+      <div class="help-block">
+        {% for error in form.password.errors %}
+        <strong style="color:red">{{ error }}</strong>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
     <button type="submit">Login</button>
   </form>
   <p>Admin login: <a href="{% url 'admin_login' %}">Click here</a></p>

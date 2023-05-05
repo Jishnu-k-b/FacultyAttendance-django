@@ -26,6 +26,7 @@ def register(request):
                 date_of_join=form.cleaned_data['date_of_join'],
                 subject = form.cleaned_data['subject']
             )
+            faculty.save()
             login(request, user)
             return redirect('index')
     else:
