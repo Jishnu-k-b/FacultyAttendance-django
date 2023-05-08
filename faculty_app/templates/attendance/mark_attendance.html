@@ -8,16 +8,15 @@
 <br>
 <br>
 <br>
-
 <!-- mark_attendance.html -->
 <button onclick="getLocation()">Get Location</button>
 <form method="post">
     {% csrf_token %}
     <label for="lat">Latitude:</label>
-    <input type="text" name="lat" id="lat">
+    <input type="text" name="lat" id="lat" readonly>
     <br>
     <label for="lng">Longitude:</label>
-    <input type="text" name="lng" id="lng">
+    <input type="text" name="lng" id="lng" readonly>
     <br>
     <button type="submit">Mark Attendance</button>
 </form>
